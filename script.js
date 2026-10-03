@@ -62,8 +62,8 @@ function prevMatchup(eventId) { stepMatchup(eventId, -1); }
 // The key is the fighter's name exactly as it appears in the matchup list above.
 // Fighters without a photo keep the grey silhouette.
 const fighterPics = {
-    'Orchard': 'fighters/orchard.png',
-    'Nick Diaz': 'fighters/nick-diaz.png'
+    'Orchard': 'orchard.png',
+    'Nick Diaz': 'nick-diaz.png'
 };
 
 function setAvatar(el, name) {
