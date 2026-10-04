@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
     <header class="ufc-header">
@@ -30,6 +30,7 @@
                 <svg id="logo-fallback" class="logo-svg" viewBox="0 0 120 44" role="img" aria-label="CCA"><text x="0" y="40" textLength="118" lengthAdjust="spacingAndGlyphs">CCA</text></svg>
             </div>
             <nav class="nav-right">
+                <button class="ufc-nav-btn" onclick="switchTab(event, 'ad')">ADVERTISEMENT</button>
                 <button class="ufc-nav-btn" onclick="switchTab(event, 'watch')">WATCH</button>
                 <a href="https://discord.gg/vCA5DwTGv" target="_blank" rel="noopener noreferrer" class="ufc-nav-link">CONNECT</a>
             </nav>
@@ -76,6 +77,19 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="ad" class="tab-content">
+            <h2 class="section-title">ADVERTISEMENT</h2>
+            <div class="ad-frame">
+                <video controls playsinline preload="metadata" poster="uppercut-energy-cover.jpg">
+                    <source src="uppercut-energy.mp4" type="video/mp4">
+                    <source src="uppercut-energy.webm" type="video/webm">
+                    Your browser can't play this video.
+                </video>
+            </div>
+            <p class="ad-caption">Uppercut Energy</p>
+            <p class="ad-error" hidden>The video file wasn't found. Make sure uppercut-energy.mp4 (and uppercut-energy.webm) are in the same folder as index.html.</p>
         </section>
 
         <section id="upcoming" class="tab-content">
@@ -361,6 +375,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=7"></script>
 </body>
 </html>

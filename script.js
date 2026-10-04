@@ -1,5 +1,6 @@
 // Switch navigation tabs
 function switchTab(event, tabId) {
+    document.querySelectorAll('video').forEach(v => v.pause()); // stop any ad video when changing tabs
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
     const navBtns = document.querySelectorAll('.ufc-nav-btn');
@@ -242,3 +243,15 @@ function closeFighter() {
 document.getElementById('fighter-modal').addEventListener('click', e => { if (e.target.id === 'fighter-modal') closeFighter(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFighter(); });
 buildRoster();
+
+// If an ad video can't load (file missing from the folder), say so instead of showing a dead player
+document.querySelectorAll('.ad-frame video').forEach(v => {
+    const sources = v.querySelectorAll('source');
+    const last = sources[sources.length - 1];
+    if (!last) return;
+    last.addEventListener('error', () => {
+        const box = v.closest('.ad-block, section');
+        const msg = box && box.querySelector('.ad-error');
+        if (msg) msg.hidden = false;
+    });
+});
