@@ -31,10 +31,10 @@ function toggleCardDetails(cardId, btnElement) {
 
 // Matchup carousel arrows (add one entry per event)
 const matchups = {
-    'ama004': ['Orchard vs Nick Diaz', 'Ghost vs Killshot Kev', 'JP vs Garcieh', 'El eagle vs Yoshiki', 'Sephtis vs MohLester', 'WeStY vs Slayz', 'Doom vs 3 Dot', 'vite vs Zac', 'Wezayy vs Jeffbob', 'Vinyl vs Kevin Steel', 'IPPO vs Volg', 'Youngslowwilson vs Grayson “The Ragin Cajun”'],
-    'ama005': ['TBD VS TBD']
+    'ama005': ['TBD VS TBD'],
+    'ama006': ['TBD VS TBD']
 };
-const currentMatchupIndices = { 'ama004': 0, 'ama005': 0 };
+const currentMatchupIndices = { 'ama005': 0, 'ama006': 0 };
 
 function stepMatchup(eventId, dir) {
     const list = matchups[eventId];
@@ -58,18 +58,28 @@ function prevMatchup(eventId) { stepMatchup(eventId, -1); }
 })();
 
 // ===== Fighter photos =====
-// To add a photo: put the image in the "fighters" folder and add a line below.
-// The key is the fighter's name exactly as it appears in the matchup list above.
+// Photos are found automatically from the fighter's name: lowercase it and turn spaces/symbols into hyphens.
+//   Nick Diaz -> nick-diaz.png     El eagle -> el-eagle.png     3 Dot -> 3-dot.png
+// Upload the cropped picture with that file name next to index.html and the fighter's photo
+// shows up everywhere (event cards, Watch tab, roster, profile pop-up). No code change needed.
 // Fighters without a photo keep the grey silhouette.
+// Only if a name is awkward, set the file by hand here, e.g. 'Grayson \u201cThe Ragin Cajun\u201d': 'grayson.png'
 const fighterPics = {
-    'Orchard': 'orchard.png',
-    'Nick Diaz': 'nick-diaz.png'
+    'Grayson \u201cThe Ragin Cajun\u201d': 'grayson.png'
 };
+
+function photoFor(name) {
+    const n = (name || '').trim();
+    if (!n || /^tbd$/i.test(n)) return null;
+    if (fighterPics[n]) return fighterPics[n];
+    const slug = n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    return slug ? slug + '.png' : null;
+}
 
 function setAvatar(el, name) {
     if (!el) return;
     if (el.dataset.fallback === undefined) el.dataset.fallback = el.innerHTML; // remember the silhouette
-    const src = fighterPics[(name || '').trim()];
+    const src = photoFor(name);
     if (src) {
         el.innerHTML = '';
         const img = document.createElement('img');
@@ -95,7 +105,7 @@ function renderWatchAvatars() {
     });
 }
 
-renderCarouselAvatars('ama004');
+Object.keys(matchups).forEach(renderCarouselAvatars);
 renderWatchAvatars();
 
 
@@ -117,7 +127,7 @@ const fights = [
     { ev: 'AMA 002', a: 'El eagle',   b: 'WeStY',        m: 'dec' },
     { ev: 'AMA 002', a: 'Sephtis',    b: 'Tickle “TMT” Monster', m: 'ko' },
     { ev: 'AMA 002', a: 'Garcieh',    b: 'JP',           m: 'ko'  },
-    { ev: 'AMA 002', a: 'Yoshiki',    b: '3 Dot',        m: 'draw' },
+    { ev: 'AMA 002', a: 'Yoshiki',    b: '3 Dot',        m: 'ko'  },
     // AMA 003
     { ev: 'AMA 003', a: 'Slayz',      b: 'PLIXY',        m: 'dec' },
     { ev: 'AMA 003', a: 'The Surgeon', b: 'Wezayy',      m: 'ko'  },
@@ -125,10 +135,21 @@ const fights = [
     { ev: 'AMA 003', a: 'Ghost',      b: 'El eagle',     m: 'dec' },
     { ev: 'AMA 003', a: 'Ashton',     b: 'Garcieh',      m: 'dec' },
     { ev: 'AMA 003', a: 'Cobra Boy',  b: 'Bash',         m: 'ko'  },
-    { ev: 'AMA 003', a: 'Bluray',     b: 'Taco',         m: 'ko'  }
+    { ev: 'AMA 003', a: 'Bluray',     b: 'Taco',         m: 'ko'  },
+    // AMA 004
+    { ev: 'AMA 004', a: 'Ashton',      b: 'leo',             m: 'ko'  },
+    { ev: 'AMA 004', a: 'Killshot Kev', b: '3 Dot',          m: 'ko'  },
+    { ev: 'AMA 004', a: 'WeStY',       b: 'Swayz',           m: 'dec' },
+    { ev: 'AMA 004', a: 'Sephtis',     b: 'ddbbd',           m: 'ko'  },
+    { ev: 'AMA 004', a: 'El eagle',    b: 'ilia topuria',    m: 'dec' },
+    { ev: 'AMA 004', a: 'Garcieh',     b: 'JP',              m: 'ko'  },
+    { ev: 'AMA 004', a: 'The Surgeon', b: 'Ghost',           m: 'draw' },
+    { ev: 'AMA 004', a: 'Orchard',     b: 'Nick Diaz',       m: 'dec' },
+    { ev: 'AMA 004', a: 'Grayson \u201cThe Ragin Cajun\u201d', b: 'Youngslowwilson', m: 'ko' },
+    { ev: 'AMA 004', a: 'Boiled Bubblegum', b: 'IPPO',       m: 'dec' }
 ];
 // On the roster but with no counted fights yet
-const rosterExtras = ['Styxo', 'Eddeh'];
+const rosterExtras = ['Styxo', 'Eddeh', 'Volg'];
 
 function fighterStats(name) {
     const st = { dec: 0, ko: 0, draw: 0, loss: 0, history: [] };
@@ -161,10 +182,20 @@ function buildRoster() {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'roster-card';
+        const thumb = document.createElement('span'); thumb.className = 'rc-photo';
+        thumb.textContent = name.replace(/[^A-Za-z0-9]/g, '').charAt(0).toUpperCase();
+        const src = photoFor(name);
+        if (src) {
+            const img = new Image();
+            img.alt = name;
+            img.onload = () => { thumb.textContent = ''; thumb.appendChild(img); };
+            img.src = src; // if the file doesn't exist, the letter stays
+        }
+        const info = document.createElement('span'); info.className = 'rc-info';
         const n = document.createElement('span'); n.className = 'rc-name'; n.textContent = name;
-        const t = document.createElement('span'); t.className = 'rc-sub';
-        t.textContent = recordText(st);
-        btn.append(n, t);
+        const t = document.createElement('span'); t.className = 'rc-sub'; t.textContent = recordText(st);
+        info.append(n, t);
+        btn.append(thumb, info);
         btn.onclick = () => openFighter(name);
         grid.appendChild(btn);
     });
@@ -180,11 +211,14 @@ function openFighter(name) {
     document.getElementById('fm-loss').textContent = st.loss;
     const photo = document.getElementById('fm-photo');
     photo.innerHTML = '';
-    if (fighterPics[name]) {
-        const img = document.createElement('img');
-        img.src = fighterPics[name]; img.alt = name;
-        photo.appendChild(img); photo.hidden = false;
-    } else { photo.hidden = true; }
+    photo.hidden = true;
+    const psrc = photoFor(name);
+    if (psrc) {
+        const img = new Image();
+        img.alt = name;
+        img.onload = () => { photo.appendChild(img); photo.hidden = false; };
+        img.src = psrc;
+    }
     const list = document.getElementById('fm-history');
     list.innerHTML = '';
     if (!st.history.length) {
