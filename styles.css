@@ -257,3 +257,10 @@ h2.section-title::after{content:'';position:absolute;left:0;bottom:0;width:72px;
 .ad-frame video{display:block;width:100%;height:auto;max-height:70vh;margin:0 auto;background:#000}
 .ad-caption{font:400 24px var(--display);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:12px}
 .ad-error{margin-top:12px;font:400 22px var(--display);letter-spacing:1px;text-transform:uppercase;color:var(--accent)}
+
+/* Always light: stops browsers and phones from auto-darkening the site */
+html{color-scheme:only light;background:#fff;color:#000}
+body{background:#fff}
+.ad-item{margin-bottom:44px}
+.ad-item:last-child{margin-bottom:0}
+@media (max-width:700px){.nav-left,.nav-right{flex-wrap:wrap;justify-content:center;gap:4px 14px}}

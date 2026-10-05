@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="only light">
+    <meta name="supported-color-schemes" content="light">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CCA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
     <header class="ufc-header">
@@ -81,15 +83,28 @@
 
         <section id="ad" class="tab-content">
             <h2 class="section-title">ADVERTISEMENT</h2>
-            <div class="ad-frame">
-                <video controls playsinline preload="metadata" poster="uppercut-energy-cover.jpg">
-                    <source src="uppercut-energy.mp4" type="video/mp4">
-                    <source src="uppercut-energy.webm" type="video/webm">
-                    Your browser can't play this video.
-                </video>
+                        <div class="ad-item">
+                <div class="ad-frame">
+                    <video controls playsinline preload="metadata" poster="diamond-gym-cover.jpg">
+                        <source src="diamond-gym.mp4" type="video/mp4">
+                        <source src="diamond-gym.webm" type="video/webm">
+                        Your browser can't play this video.
+                    </video>
+                </div>
+                <p class="ad-caption">Diamond Gym</p>
+                <p class="ad-error" hidden>The video file wasn't found. Make sure diamond-gym.mp4 (and diamond-gym.webm) are in the same folder as index.html.</p>
             </div>
-            <p class="ad-caption">Uppercut Energy</p>
-            <p class="ad-error" hidden>The video file wasn't found. Make sure uppercut-energy.mp4 (and uppercut-energy.webm) are in the same folder as index.html.</p>
+            <div class="ad-item">
+                <div class="ad-frame">
+                    <video controls playsinline preload="metadata" poster="uppercut-energy-cover.jpg">
+                        <source src="uppercut-energy.mp4" type="video/mp4">
+                        <source src="uppercut-energy.webm" type="video/webm">
+                        Your browser can't play this video.
+                    </video>
+                </div>
+                <p class="ad-caption">Uppercut Energy</p>
+                <p class="ad-error" hidden>The video file wasn't found. Make sure uppercut-energy.mp4 (and uppercut-energy.webm) are in the same folder as index.html.</p>
+            </div>
         </section>
 
         <section id="upcoming" class="tab-content">
@@ -375,6 +390,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=7"></script>
+    <script src="script.js?v=8"></script>
 </body>
 </html>
