@@ -32,10 +32,10 @@ function toggleCardDetails(cardId, btnElement) {
 
 // Matchup carousel arrows (add one entry per event)
 const matchups = {
-    'ama005': ['TBD VS TBD'],
-    'ama006': ['TBD VS TBD']
+    'ama006': ['TBD VS TBD'],
+    'ama007': ['TBD VS TBD']
 };
-const currentMatchupIndices = { 'ama005': 0, 'ama006': 0 };
+const currentMatchupIndices = { 'ama006': 0, 'ama007': 0 };
 
 function stepMatchup(eventId, dir) {
     const list = matchups[eventId];
@@ -147,10 +147,24 @@ const fights = [
     { ev: 'AMA 004', a: 'The Surgeon', b: 'Ghost',           m: 'draw' },
     { ev: 'AMA 004', a: 'Orchard',     b: 'Nick Diaz',       m: 'dec' },
     { ev: 'AMA 004', a: 'Grayson \u201cThe Ragin Cajun\u201d', b: 'Youngslowwilson', m: 'ko' },
-    { ev: 'AMA 004', a: 'Boiled Bubblegum', b: 'IPPO',       m: 'dec' }
+    { ev: 'AMA 004', a: 'Boiled Bubblegum', b: 'IPPO',       m: 'dec' },
+    // AMA 005
+    { ev: 'AMA 005', a: 'Roatan',     b: 'Ashton',       m: 'dec' },
+    { ev: 'AMA 005', a: 'Stevieee',   b: 'Bluray',       m: 'dec' },
+    { ev: 'AMA 005', a: 'Nick Diaz',  b: 'Zac',          m: 'ko'  },
+    { ev: 'AMA 005', a: 'Kxh7',       b: 'Xirved',       m: 'dec' },
+    { ev: 'AMA 005', a: 'Garcieh',    b: 'Ghost',        m: 'ko'  },
+    { ev: 'AMA 005', a: 'Jaybocka',   b: 'Killshot Kev', m: 'dec' },
+    { ev: 'AMA 005', a: 'Mystic',     b: 'Vinyl',        m: 'ko'  }
 ];
 // On the roster but with no counted fights yet
 const rosterExtras = ['Styxo', 'Eddeh', 'Volg'];
+// Results from before AMA 001 / fights not on any card above. Counts only (dec, ko, draw, loss).
+// Roatan's 1-0-0 and Ashton's 2-1-0 in the AMA 005 Discord post include fights we don't have details for.
+const earlierRecords = {
+    'Roatan': { dec: 1 },
+    'Ashton': { loss: 1 }
+};
 
 function fighterStats(name) {
     const st = { dec: 0, ko: 0, draw: 0, loss: 0, history: [] };
@@ -167,6 +181,16 @@ function fighterStats(name) {
             st.history.push({ ev: f.ev, text: `Loss (${label}) vs ${f.a}` });
         }
     });
+    const extra = earlierRecords[name];
+    if (extra) {
+        ['dec', 'ko', 'draw', 'loss'].forEach(k => { st[k] += extra[k] || 0; });
+        const wins = (extra.dec || 0) + (extra.ko || 0);
+        const bits = [];
+        if (wins) bits.push(wins + (wins === 1 ? ' win' : ' wins'));
+        if (extra.draw) bits.push(extra.draw + (extra.draw === 1 ? ' draw' : ' draws'));
+        if (extra.loss) bits.push(extra.loss + (extra.loss === 1 ? ' loss' : ' losses'));
+        st.history.unshift({ ev: 'Earlier', text: bits.join(', ') + ' (details not recorded)' });
+    }
     return st;
 }
 
