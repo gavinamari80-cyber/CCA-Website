@@ -113,10 +113,12 @@ renderWatchAvatars();
 // ===== Roster =====
 // Every fight, winner first. method: 'dec' (decision), 'ko', or 'draw' (then the order doesn't matter).
 // To add a new result, add a line here and the roster updates by itself.
+// skip: 'a' | 'b' | 'both' = leave that fighter's side out of their record (used where the Discord record doesn't count the fight).
+// The fight still shows in their history, marked "not in record".
 const fights = [
     // AMA 001
-    { ev: 'AMA 001', a: 'Sephtis',    b: 'Siso',         m: 'dec' },
-    { ev: 'AMA 001', a: 'Jackmon_OP', b: 'Kxh7',         m: 'dec' },
+    { ev: 'AMA 001', a: 'Sephtis',    b: 'Siso',         m: 'ko'  },
+    { ev: 'AMA 001', a: 'Jackmon_OP', b: 'KX7',          m: 'dec', skip: 'b' },
     { ev: 'AMA 001', a: 'mahrfp',     b: 'Slim',         m: 'ko'  },
     { ev: 'AMA 001', a: '3 Dot',      b: 'IPPO',         m: 'dec' },
     { ev: 'AMA 001', a: 'Yoshiki',    b: 'Killshot Kev', m: 'draw' },
@@ -128,9 +130,9 @@ const fights = [
     { ev: 'AMA 002', a: 'El eagle',   b: 'WeStY',        m: 'dec' },
     { ev: 'AMA 002', a: 'Sephtis',    b: 'Tickle “TMT” Monster', m: 'ko' },
     { ev: 'AMA 002', a: 'Garcieh',    b: 'JP',           m: 'ko'  },
-    { ev: 'AMA 002', a: 'Yoshiki',    b: '3 Dot',        m: 'ko'  },
+    { ev: 'AMA 002', a: 'Yoshiki',    b: '3 Dot',        m: 'ko', skip: 'both' },
     // AMA 003
-    { ev: 'AMA 003', a: 'Slayz',      b: 'PLIXY',        m: 'dec' },
+    { ev: 'AMA 003', a: 'Swayz',      b: 'PLIXY',        m: 'dec' },
     { ev: 'AMA 003', a: 'The Surgeon', b: 'Wezayy',      m: 'ko'  },
     { ev: 'AMA 003', a: 'Sephtis',    b: 'Jeffbob',      m: 'ko'  },
     { ev: 'AMA 003', a: 'Ghost',      b: 'El eagle',     m: 'dec' },
@@ -139,7 +141,7 @@ const fights = [
     { ev: 'AMA 003', a: 'Bluray',     b: 'Taco',         m: 'ko'  },
     // AMA 004
     { ev: 'AMA 004', a: 'Ashton',      b: 'leo',             m: 'ko'  },
-    { ev: 'AMA 004', a: 'Killshot Kev', b: '3 Dot',          m: 'ko'  },
+    { ev: 'AMA 004', a: 'Killshot Kev', b: '3 Dot',          m: 'ko', skip: 'b' },
     { ev: 'AMA 004', a: 'WeStY',       b: 'Swayz',           m: 'dec' },
     { ev: 'AMA 004', a: 'Sephtis',     b: 'ddbbd',           m: 'ko'  },
     { ev: 'AMA 004', a: 'El eagle',    b: 'ilia topuria',    m: 'dec' },
@@ -147,12 +149,12 @@ const fights = [
     { ev: 'AMA 004', a: 'The Surgeon', b: 'Ghost',           m: 'draw' },
     { ev: 'AMA 004', a: 'Orchard',     b: 'Nick Diaz',       m: 'dec' },
     { ev: 'AMA 004', a: 'Grayson \u201cThe Ragin Cajun\u201d', b: 'Youngslowwilson', m: 'ko' },
-    { ev: 'AMA 004', a: 'Boiled Bubblegum', b: 'IPPO',       m: 'dec' },
+    { ev: 'AMA 004', a: 'Boiled Bubblegum', b: 'IPPO',       m: 'dec', skip: 'both' },
     // AMA 005
     { ev: 'AMA 005', a: 'Roatan',     b: 'Ashton',       m: 'dec' },
-    { ev: 'AMA 005', a: 'Stevieee',   b: 'Bluray',       m: 'dec' },
+    { ev: 'AMA 005', a: 'Stevie',     b: 'Bluray',       m: 'dec' },
     { ev: 'AMA 005', a: 'Nick Diaz',  b: 'Zac',          m: 'ko'  },
-    { ev: 'AMA 005', a: 'Kxh7',       b: 'Xirved',       m: 'dec' },
+    { ev: 'AMA 005', a: 'KX7',        b: 'Xirved',       m: 'dec' },
     { ev: 'AMA 005', a: 'Garcieh',    b: 'Ghost',        m: 'ko'  },
     { ev: 'AMA 005', a: 'Jaybocka',   b: 'Killshot Kev', m: 'dec' },
     { ev: 'AMA 005', a: 'Mystic',     b: 'Vinyl',        m: 'ko'  }
@@ -160,26 +162,22 @@ const fights = [
 // On the roster but with no counted fights yet
 const rosterExtras = ['Styxo', 'Eddeh', 'Volg'];
 // Results from before AMA 001 / fights not on any card above. Counts only (dec, ko, draw, loss).
-// Roatan's 1-0-0 and Ashton's 2-1-0 in the AMA 005 Discord post include fights we don't have details for.
-const earlierRecords = {
-    'Roatan': { dec: 1 },
-    'Ashton': { loss: 1 }
-};
+// Example: 'Name': { dec: 1, loss: 1 }  (empty for now - every record comes from the fights list above)
+const earlierRecords = {};
 
 function fighterStats(name) {
     const st = { dec: 0, ko: 0, draw: 0, loss: 0, history: [] };
     fights.forEach(f => {
+        const isA = f.a === name, isB = f.b === name;
+        if (!isA && !isB) return;
+        const skipped = f.skip === 'both' || (isA && f.skip === 'a') || (isB && f.skip === 'b');
         const label = f.m === 'dec' ? 'Decision' : f.m === 'ko' ? 'KO' : 'Draw';
-        if (f.m === 'draw' && (f.a === name || f.b === name)) {
-            st.draw++;
-            st.history.push({ ev: f.ev, text: `Draw vs ${f.a === name ? f.b : f.a}` });
-        } else if (f.a === name) {
-            st[f.m]++;
-            st.history.push({ ev: f.ev, text: `Win (${label}) vs ${f.b}` });
-        } else if (f.b === name) {
-            st.loss++;
-            st.history.push({ ev: f.ev, text: `Loss (${label}) vs ${f.a}` });
-        }
+        const opp = isA ? f.b : f.a;
+        let text;
+        if (f.m === 'draw') { text = `Draw vs ${opp}`; if (!skipped) st.draw++; }
+        else if (isA)       { text = `Win (${label}) vs ${opp}`;  if (!skipped) st[f.m]++; }
+        else                { text = `Loss (${label}) vs ${opp}`; if (!skipped) st.loss++; }
+        st.history.push({ ev: f.ev, text: text + (skipped ? ' (not in record)' : '') });
     });
     const extra = earlierRecords[name];
     if (extra) {

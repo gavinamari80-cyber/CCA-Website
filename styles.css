@@ -264,3 +264,23 @@ body{background:#fff}
 .ad-item{margin-bottom:44px}
 .ad-item:last-child{margin-bottom:0}
 @media (max-width:700px){.nav-left,.nav-right{flex-wrap:wrap;justify-content:center;gap:4px 14px}}
+/* Partners */
+.partners-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.partner-card{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;background:#fff;border:1px solid var(--line);border-top:6px solid var(--accent);padding:30px 20px 26px}
+.partner-logo{display:block;width:160px;height:160px;transition:transform .2s}
+.partner-logo:hover,.partner-logo:focus-visible{transform:scale(1.05)}
+.partner-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.partner-name{font:400 40px/1 var(--display);text-transform:uppercase}
+.partner-name{text-transform:none}
+@media (max-width:1400px){.nav-left,.nav-right{gap:18px}.ufc-nav-btn,.ufc-nav-link{font-size:20px;letter-spacing:1px}.header-container{padding:0 16px}}
+@media (max-width:1180px){.nav-left,.nav-right{gap:12px}.ufc-nav-btn,.ufc-nav-link{font-size:18px;letter-spacing:.6px}.logo-img{max-width:130px}.logo-svg{width:84px}}
+@media (max-width:1000px) and (min-width:901px){.nav-left,.nav-right{gap:9px}.ufc-nav-btn,.ufc-nav-link{font-size:16px;letter-spacing:.3px}.logo-img{max-width:90px}.logo-svg{width:64px}.header-container{padding:0 8px}}
+@media (max-width:900px){
+    .header-container{height:auto;flex-wrap:wrap;justify-content:center;padding:8px 12px}
+    .logo-center{order:-1;width:100%;padding:6px 0}
+    .logo-img{max-width:200px}.logo-svg{width:110px}
+    .nav-left,.nav-right{flex:initial;gap:16px}
+    .ufc-nav-btn,.ufc-nav-link{padding:10px 0;font-size:19px}
+    .subnav-dropdown{padding-left:12px;gap:28px}
+}
+@media (max-width:700px){.ufc-nav-btn,.ufc-nav-link{font-size:17px}.nav-left,.nav-right{gap:12px}}
